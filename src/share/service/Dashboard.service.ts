@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Athletes } from '../interface/athletes';
 import { dsv } from 'd3';
-import { Crossfilter, Dimension } from 'crossfilter2';
+import { Crossfilter, Dimension, Group } from 'crossfilter2';
 import * as crossfilter from 'crossfilter2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  ndx: Crossfilter<Athletes>;
+  private ndx: Crossfilter<Athletes>;
+  athletesDimension: Dimension<Athletes, string>;
+  numberOfAthletesPerYearGroup: Group<Athletes, string, string>;
+
   constructor() { }
+
+  private createGroupFromDimension() {
+    this.numberOfAthletesPerYearGroup = this.athletesDimension.group();
+    console.log(this.numberOfAthletesPerYearGroup.all());
+  }
 
   getData() {
     dsv(',', '/assets/athlete_events.csv', row => ({
@@ -27,7 +35,10 @@ export class DashboardService {
       team: row['Team'],
       year: row['Year'] !== 'NA' ? +row['Year'] : null
     })).then(result => {
+      console.log(result.splice(0, 10));
       this.ndx = crossfilter(result);
+      this.athletesDimension = this.ndx.dimension(d => d.games);
+      this.createGroupFromDimension();
     });
   }
 
