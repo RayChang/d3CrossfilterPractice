@@ -13,3 +13,14 @@ export interface Athletes {
   team: string;
   year: number;
 }
+
+export interface AthletesPerYearGroupValue {
+  year: Date;
+  season: string;
+  count: number;
+}
+
+export interface AthletesPerYearGroupItem<TValue> {
+  key: string;
+  value: TValue;
+}
