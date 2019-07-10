@@ -10,33 +10,34 @@ import { Athletes, AthletesPerYearGroupValue } from '../interface/numberOfAthlet
 })
 export class DashboardService {
   private ndx: Crossfilter<Athletes>;
-  private athletesDimension: Dimension<Athletes, string>;
+  athletesDimension: Dimension<Athletes, string>;
+  athletesGroup: Group<Athletes, string, AthletesPerYearGroupValue>;
   athletesPerYearGroup$ = new Subject<Group<Athletes, string, AthletesPerYearGroupValue>>();
 
   constructor() { }
 
   private createGroupFromDimension() {
-    this.athletesPerYearGroup$.next(
-      this.athletesDimension.group<string, AthletesPerYearGroupValue>()
-        .reduce(
-          // reduceAdd()
-          (output, input) => {
-            ++output.count;
-            output.year = new Date(input.year, 0, 1, 0);
-            output.season = input.season;
-            return output;
-          },
-          // reduceRemove()
-          (output, input) => {
-            --output.count;
-            output.year = new Date(input.year, 0, 1, 0);
-            output.season = input.season;
-            return output;
-          },
-          // reduceInitial()
-          () => ({year: null, season: null, count: 0})
-        ).order(d => d.count)
-    );
+    this.athletesGroup = this.athletesDimension.group<string, AthletesPerYearGroupValue>()
+    .reduce(
+      // reduceAdd()
+      (output, input) => {
+        ++output.count;
+        output.year = new Date(input.year, 0, 1, 0);
+        output.season = input.season;
+        return output;
+      },
+      // reduceRemove()
+      (output, input) => {
+        --output.count;
+        output.year = new Date(input.year, 0, 1, 0);
+        output.season = input.season;
+        return output;
+      },
+      // reduceInitial()
+      () => ({year: null, season: null, count: 0})
+    ).order(d => d.count);
+
+    this.athletesPerYearGroup$.next(this.athletesGroup);
   }
 
   getData() {

@@ -4,9 +4,9 @@ import {
   scaleTime, ScaleTime,
   select, Selection,
   scaleLinear, ScaleLinear,
-  axisLeft, axisBottom, Axis
+  axisLeft, axisBottom, Axis, interpolateRound
 } from 'd3';
-import { Group } from 'crossfilter2';
+import { Group, Dimension } from 'crossfilter2';
 import { DashboardService } from 'src/share/service/Dashboard.service';
 import {
   Athletes,
@@ -38,6 +38,7 @@ export class NumberOfAthletesPerYearComponent implements OnInit {
   }
 
   private render(group: Group<Athletes, string, AthletesPerYearGroupValue>) {
+    console.log(group.all());
     this.group = group;
     this.createSvg();
     this.initScales();
@@ -95,7 +96,7 @@ export class NumberOfAthletesPerYearComponent implements OnInit {
       .append('path')
       .attr('fill', 'none')
       .attr('stroke', 'darkorange')
-      .attr('d', line(this.group.top(Infinity)));
+      .attr('d', line(this.group.all()));
   }
 
   private drawPoints() {
@@ -103,13 +104,31 @@ export class NumberOfAthletesPerYearComponent implements OnInit {
       .append('g')
       .attr('class', 'c-points')
       .selectAll('circle')
-      .data(this.group.top(Infinity))
+      .data(this.group.all())
       .enter()
+      .datum(this.group.all())
       .append('circle')
-      .attr('cx', d => this.yearScale(d.value.year))
-      .attr('cy', d => this.countScale(d.value.count))
+      .attr('cx', (d, i) => this.yearScale(d[i].value.year))
+      .attr('cy', (d, i) => this.countScale(d[i].value.count))
       .attr('r', 3)
-      .attr('fill', 'darkorange');
+      .attr('fill', 'darkorange')
+      .on('mouseover', (data, index, elements) => {
+        select(elements[index])
+          .transition()
+          .duration(200)
+          .attr('r', 5);
+          // .tween('animation', (d, i, e) => t => select(e[i]).attr('r', interpolateRound(3, 5)(t)));
+      })
+      .on('mouseleave', (data, index, elements) => {
+        select(elements[index])
+          .transition()
+          .duration(500)
+          .attr('r', 3);
+      })
+      .on('click', (data, index) => {
+        this.dashboardService.athletesDimension.filter(data[index].key);
+        console.log(this.dashboardService.athletesGroup.all());
+      });
   }
 
 }
