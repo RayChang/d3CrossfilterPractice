@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { NumberOfAthletesPerYearComponent } from './numberOfAthletesPerYear.component';
+import { AthletesPerYearComponent } from './athletes-per-year.component';
 
 describe('NumberOfAthletesPerYearComponent', () => {
-  let component: NumberOfAthletesPerYearComponent;
-  let fixture: ComponentFixture<NumberOfAthletesPerYearComponent>;
+  let component: AthletesPerYearComponent;
+  let fixture: ComponentFixture<AthletesPerYearComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumberOfAthletesPerYearComponent ]
+      declarations: [ AthletesPerYearComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NumberOfAthletesPerYearComponent);
+    fixture = TestBed.createComponent(AthletesPerYearComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

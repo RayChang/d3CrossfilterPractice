@@ -14,13 +14,19 @@ export interface Athletes {
   year: number;
 }
 
-export interface AthletesPerYearGroupValue {
+export interface AthletesPerYear {
   year: Date;
   season: string;
   count: number;
 }
 
-export interface AthletesPerYearGroupItem<TValue> {
+export interface GroupItem<TValue> {
   key: string;
   value: TValue;
+}
+
+export interface MyInterface {
+  age: number;
+  sex: string;
+  count: number;
 }
