@@ -3,11 +3,11 @@ import { Crossfilter, Dimension, Group } from 'crossfilter2';
 import { Athletes, MyInterface } from 'src/share/interface/athletes.interface';
 
 @Component({
-  selector: 'app-my-component',
-  templateUrl: './my-component.component.html',
-  styleUrls: ['./my-component.component.css']
+  selector: 'app-age-sex',
+  templateUrl: './age-sex.component.html',
+  styleUrls: ['./age-sex.component.css']
 })
-export class MyComponentComponent implements OnInit, OnChanges {
+export class AgeSexComponent implements OnInit, OnChanges {
   @Input() ndx: Crossfilter<Athletes>;
   private dimension: Dimension<Athletes, string>;
   private group: Group<Athletes, string, MyInterface>;
